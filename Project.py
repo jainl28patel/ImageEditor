@@ -76,13 +76,16 @@ class Ui_MainWindow(object):
         self.actionRGB.setObjectName("actionRGB")
         self.actionmono = QtWidgets.QAction(MainWindow)
         self.actionmono.setObjectName("actionmono")
+        self.action2 = QtWidgets.QAction(MainWindow)
+        self.action2.setObjectName("action2")
         self.actioncrop = QtWidgets.QAction(MainWindow)
-        self.actionmono.setObjectName("actioncrop")
+        self.actioncrop.setObjectName("actioncrop")
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
         self.menuEffects.addAction(self.actionGrey_scale)
         self.menuEffects.addAction(self.actionRGB)
         self.menuEffects.addAction(self.actionmono)
+        self.menuEffects.addAction(self.action2)
         self.menuEdit.addAction(self.actioncrop)
         self.menuEdit.addAction(self.actionRotate_CW)
         self.menuEdit.addAction(self.actionRotate_ACW)
@@ -116,6 +119,7 @@ class Ui_MainWindow(object):
         self.actionRGB.triggered.connect(self.rgb)
         self.actionGrey_scale.triggered.connect(self.greyscale)
         self.actionmono.triggered.connect(self.mono)
+        self.action2.triggered.connect(self.two)
         #reducing size
         self.actionReduce_size.triggered.connect(self.reduce_size)
         #saving
@@ -159,20 +163,28 @@ class Ui_MainWindow(object):
         self.img = self.img.transformed(transform)
         self.label.setPixmap(QPixmap().fromImage(self.img))
     def rgb(self):
-        converted = self.img.convertToFormat(QImage.Format_RGB32)
-        self.img=QImage(converted)
+        # converted = self.img.convertToFormat(QImage.Format_RGB32)
+        # self.img=QImage(converted)
+        # self.label.setPixmap(QPixmap().fromImage(self.img))
+        value = qRgb(0, 0, 0)
+        self.img.setPixel(1,1,value)
         self.label.setPixmap(QPixmap().fromImage(self.img))
+
     def greyscale(self):
         converted=self.img.convertToFormat(QImage.Format_Grayscale16)
         self.img = QImage(converted)
         self.label.setPixmap(QPixmap().fromImage(self.img))
     def mono(self):
-        converted=self.img.convertToFormat(QImage.Format_Mono)
+        converted=self.img.convertToFormat(QImage.Format_MonoLSB)
         self.img = QImage(converted)
         self.label.setPixmap(QPixmap().fromImage(self.img))
     def save(self):
         fname = QFileDialog.getSaveFileName()
         self.img.save(fname[0])
+    def two(self):
+        converted=self.img.convertToFormat(QImage.Format_Indexed8)
+        self.img = QImage(converted)
+        self.label.setPixmap(QPixmap().fromImage(self.img))
 
 
 
@@ -194,7 +206,8 @@ class Ui_MainWindow(object):
         self.actioninc_size.setText(_translate("MainWindow", "Increase size"))
         self.actionGrey_scale.setText(_translate("MainWindow", "Grey scale"))
         self.actionRGB.setText(_translate("MainWindow", "RGB"))
-        self.actionmono.setText(_translate("MainWindow", "MONO"))
+        self.actionmono.setText(_translate("MainWindow", "MONO_LSB(Dotted theme)"))
+        self.action2.setText(_translate("MainWindow", "Indexed8"))
         self.actionreset.setText(_translate("MainWindow", "Reset"))
         self.actioncrop.setText(_translate("MainWindow", "Crop"))
 
